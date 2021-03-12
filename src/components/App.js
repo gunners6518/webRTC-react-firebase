@@ -1,4 +1,6 @@
 import React from "react";
+import InputFormLocal from "./InputFormLocal";
+import InputFormRemote from "./InputFormRemote";
 
 //カメラと音声の許可をブラウザで求める
 const getMedia = async () => {
@@ -18,7 +20,12 @@ const getMedia = async () => {
 getMedia();
 
 const App = () => {
-  return <div>Hello, React!</div>;
+  return (
+    <>
+      <InputFormLocal />
+      <InputFormRemote />
+    </>
+  );
 };
 
 export default App;
