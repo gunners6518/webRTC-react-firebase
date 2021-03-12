@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -41,9 +41,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function InputFormLocal() {
+export default function InputFormLocal({ localPeerName, setLocalPeerName }) {
   const classes = useStyles();
   const label = "あなたの名前";
+  const [disabled, setDisabled] = useState(true);
+  const [name, setName] = useState("");
+  const [isComposed, setIsComposed] = useState(false);
+
+  // 文字入力があるか判定
+  useEffect(() => {
+    const disabled = name === "";
+    setDisabled(disabled);
+  }, [name]);
+
+  const initializeLocalPeer = useCallback(
+    (e) => {
+      setLocalPeerName(name);
+      e.preventDefault();
+    },
+    [name, setLocalPeerName]
+  );
+
+  if (localPeerName !== "") return <></>;
 
   return (
     <Container component="main" maxWidth="xs">
@@ -59,13 +78,25 @@ export default function InputFormLocal() {
             label={label}
             margin="normal"
             name="name"
+            onChange={(e) => setName(e.target.value)}
+            onCompositionEnd={() => setIsComposed(false)}
+            onCompositionStart={() => setIsComposed(true)}
+            onKeyDown={(e) => {
+              console.log({ e });
+              if (isComposed) return; //変換中のenter押下はreturn
+              if (e.target.value === "") return; //入力空でのenterはreturn
+              if (e.key === "Enter") initializeLocalPeer(e);
+            }}
             required
+            value={name}
             variant="outlined"
           />
           <Button
             className={classes.submit}
             color="primary"
+            disabled={disabled}
             fullWidth
+            onClick={(e) => initializeLocalPeer(e)}
             type="submit"
             variant="contained"
           >
