@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -41,9 +41,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function InputFormRemote({ remotePeerName, setRemotePeerName }) {
+export default function InputFormRemote({
+  remotePeerName,
+  setRemotePeerName,
+  localPeerName,
+}) {
   const classes = useStyles();
   const label = "相手の名前";
+  const [disabled, setDisabled] = useState(true);
+  const [name, setName] = useState("");
+  const [isComposed, setIsComposed] = useState(false);
+
+  // 文字入力があるか判定
+  useEffect(() => {
+    const disabled = name === "";
+    setDisabled(disabled);
+  }, [name]);
+
+  const initializeRemotePeer = useCallback(
+    (e) => {
+      setRemotePeerName(name);
+      e.preventDefault();
+    },
+    [name, setRemotePeerName]
+  );
+
+  if (localPeerName === "") return <></>;
+  if (remotePeerName !== "") return <></>;
 
   return (
     <Container component="main" maxWidth="xs">
@@ -60,6 +84,16 @@ export default function InputFormRemote({ remotePeerName, setRemotePeerName }) {
             margin="normal"
             name="name"
             required
+            onChange={(e) => setName(e.target.value)}
+            onCompositionEnd={() => setIsComposed(false)}
+            onCompositionStart={() => setIsComposed(true)}
+            onKeyDown={(e) => {
+              console.log({ e });
+              if (isComposed) return; //変換中のenter押下はreturn
+              if (e.target.value === "") return; //入力空でのenterはreturn
+              if (e.key === "Enter") initializeRemotePeer(e);
+            }}
+            value={name}
             variant="outlined"
           />
           <Button
@@ -68,6 +102,8 @@ export default function InputFormRemote({ remotePeerName, setRemotePeerName }) {
             fullWidth
             type="submit"
             variant="contained"
+            disabled={disabled}
+            onClick={(e) => initializeRemotePeer(e)}
           >
             決定
           </Button>
