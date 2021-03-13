@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function InputFormLocal({ localPeerName, setLocalPeerName }) {
+export const InputFormLocal = ({ localPeerName, setLocalPeerName }) => {
   const classes = useStyles();
   const label = "あなたの名前";
   const [disabled, setDisabled] = useState(true);
@@ -109,4 +109,4 @@ export default function InputFormLocal({ localPeerName, setLocalPeerName }) {
       </Box>
     </Container>
   );
-}
+};

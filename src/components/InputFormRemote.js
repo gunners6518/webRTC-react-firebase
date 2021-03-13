@@ -41,11 +41,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function InputFormRemote({
+export const InputFormRemote = ({
   remotePeerName,
   setRemotePeerName,
   localPeerName,
-}) {
+}) => {
   const classes = useStyles();
   const label = "相手の名前";
   const [disabled, setDisabled] = useState(true);
@@ -114,4 +114,4 @@ export default function InputFormRemote({
       </Box>
     </Container>
   );
-}
+};

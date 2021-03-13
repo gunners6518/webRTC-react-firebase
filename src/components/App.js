@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import InputFormLocal from "./InputFormLocal";
-import InputFormRemote from "./InputFormRemote";
+import { InputFormLocal } from "./InputFormLocal";
+import { InputFormRemote } from "./InputFormRemote";
+import { VideoArea } from "./VideoArea";
 
 //カメラと音声の許可をブラウザで求める
 const getMedia = async () => {
@@ -33,6 +34,7 @@ const App = () => {
         setRemotePeerName={setRemotePeerName}
         localPeerName={localPeerName}
       />
+      <VideoArea />
     </>
   );
 };
