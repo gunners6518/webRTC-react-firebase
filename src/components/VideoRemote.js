@@ -1,7 +1,12 @@
-export const VideoRemote = ({ remotePeerName }) => {
+import React, { useRef, useEffect } from "react";
+import { Video } from "./Video";
+
+export const VideoRemote = ({ name }) => {
+  const videoRef = null;
+
   return (
     <div>
-      <p> {remotePeerName}</p>
+      <Video isLocal={false} name={name} videoRef={videoRef}></Video>
     </div>
   );
 };
