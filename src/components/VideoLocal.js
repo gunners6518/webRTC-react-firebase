@@ -1,12 +1,12 @@
 import React, { useRef, useEffect } from "react";
+import { Video } from "./Video";
 
-export const VideoLocal = ({ localPeerName }) => {
+export const VideoLocal = ({ name }) => {
   const videoRef = useRef(null);
-  const currentVideoRef = videoRef.currrent;
+  let currentVideoRef = videoRef.currrent;
 
   useEffect(() => {
     if (currentVideoRef === null) return;
-
     //カメラと音声の許可をブラウザで求める
     const getMedia = async () => {
       const constraints = {
@@ -17,7 +17,7 @@ export const VideoLocal = ({ localPeerName }) => {
         const mediaStream = await navigator.mediaDevices.getUserMedia(
           constraints
         );
-        currentVideoRef.srcObject = mediaStream;
+        videoRef.current.srcObject = mediaStream;
       } catch (err) {
         console.log(err);
       }
@@ -28,7 +28,7 @@ export const VideoLocal = ({ localPeerName }) => {
 
   return (
     <div>
-      <p> {localPeerName}</p>
+      <Video isLocal={true} name={name} videoRef={videoRef}></Video>
     </div>
   );
 };
