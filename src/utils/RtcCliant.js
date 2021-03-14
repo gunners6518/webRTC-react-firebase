@@ -1,10 +1,10 @@
 export default class RtcCliant {
   constructor() {
-    const config ={
-      iceServers: [{urls: "stun.stunprotocol.org"}]
-    }
+    const config = {
+      iceServers: [{ urls: "stun:stun.stunprotocol.org" }],
+    };
     this.rtcPeerConnection = new RTCPeerConnection(config);
-    this.localPeerName = '',
-    this.remotePeerName = '',
+    this.localPeerName = "";
+    this.remotePeerName = "";
   }
 }
