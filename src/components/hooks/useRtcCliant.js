@@ -1,4 +1,4 @@
-import React, { useReducer, useState, useEffect } from "react";
+import { useReducer, useState, useEffect } from "react";
 import RtcCliant from "../../utils/RtcCliant";
 
 export const useRtcCliant = () => {
@@ -11,8 +11,12 @@ export const useRtcCliant = () => {
   };
 
   useEffect(() => {
-    const cliant = new RtcCliant(setRtcCliant);
-    cliant.setRtcCliant();
+    const init = async () => {
+      const cliant = new RtcCliant(setRtcCliant);
+      await cliant.getUserMedia();
+      cliant.setRtcCliant();
+    };
+    init();
   }, []);
 
   return rtcCliant;
