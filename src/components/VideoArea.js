@@ -23,10 +23,10 @@ export const VideoArea = ({ rtcClient }) => {
     <div className={classes.root}>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
-          <VideoLocal rtcClient={rtcClient} />
+          <VideoLocal rtcCliant={rtcCliant} />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <VideoRemote rrtcClient={rtcClient} />
+          <VideoRemote rtcCliant={rtcCliant} />
         </Grid>
       </Grid>
     </div>

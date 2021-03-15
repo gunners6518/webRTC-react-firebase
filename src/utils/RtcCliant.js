@@ -25,4 +25,19 @@ export default class RtcClient {
       console.log(error);
     }
   }
+
+  async getUserMedia() {
+    try {
+      const constraints = { audio: true, video: true };
+      this.mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  startListening(localPeerName) {
+    this.localPeerName = localPeerName;
+    this.setRtcCliant();
+    //todo:ここにシグナリングサーバーをリッスンする処理を追加する
+  }
 }

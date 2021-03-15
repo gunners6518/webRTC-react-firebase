@@ -14,8 +14,8 @@ const useRtcClient = () => {
 
   useEffect(() => {
     const init = async () => {
-      const client = new RtcClient(remoteVideoRef, setRtcClient);
-      await client.setMediaStream();
+      const Client = new RtcClient(remoteVideoRef, setRtcClient);
+      await Client.setMediaStream();
     };
 
     init();

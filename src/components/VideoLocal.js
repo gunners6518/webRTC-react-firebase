@@ -2,10 +2,10 @@ import React, { useEffect, useRef } from "react";
 
 import { Video } from "./Video";
 
-export const VideoLocal = ({ rtcClient }) => {
+export const VideoLocal = ({ rtcCliant }) => {
   const videoRef = useRef(null);
-  const currentVideoRef = videoRef.current;
-  const mediaStream = rtcClient.mediaStream;
+  let currentVideoRef = videoRef.currrent;
+  const mediaStream = rtcCliant.mediaStream;
 
   useEffect(() => {
     if (currentVideoRef === null) return;
@@ -21,15 +21,13 @@ export const VideoLocal = ({ rtcClient }) => {
     getMedia();
   }, [currentVideoRef, mediaStream]);
 
-  if (rtcClient.localPeerName === "" || rtcClient.remotePeerName === "")
-    return <></>;
-
   return (
-    <Video
-      isLocal={true}
-      name={rtcClient.localPeerName}
-      rtcClient={rtcClient}
-      videoRef={videoRef}
-    />
+    <div>
+      <Video
+        isLocal={true}
+        name={rtcCliant.localPeerName}
+        videoRef={videoRef}
+      ></Video>
+    </div>
   );
 };
