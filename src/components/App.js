@@ -1,25 +1,15 @@
-import React, { useReducer, useState } from "react";
-import { InputFormLocal } from "./InputFormLocal";
-import { InputFormRemote } from "./InputFormRemote";
+import React from "react";
+import { InputForms } from "./InputForms";
 import { VideoArea } from "./VideoArea";
-import RtcCliant from "../utils/RtcCliant";
+import { useRtcCliant } from "./hooks/useRtcCliant";
 
-const App = () => {
-  const [rtcCliant, _setRtcCliant] = useState(new RtcCliant());
-  const [, forceRender] = useReducer((boolean) => !boolean, false);
-
-  const setRtcCliant = (rtcCliant) => {
-    _setRtcCliant(rtcCliant);
-    forceRender();
-  };
+export const App = () => {
+  const rtcCliant = useRtcCliant();
 
   return (
     <>
-      <InputFormLocal rtcCliant={rtcCliant} setRtcCliant={setRtcCliant} />
-      <InputFormRemote rtcCliant={rtcCliant} setRtcCliant={setRtcCliant} />
+      <InputForms rtcCliant={rtcCliant} />
       <VideoArea rtcCliant={rtcCliant} />
     </>
   );
 };
-
-export default App;

@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const VideoArea = ({ rtcCliant }) => {
   const classes = useStyles();
+  if (rtcCliant === null) return <></>;
 
   return (
     <div className={classes.root}>
