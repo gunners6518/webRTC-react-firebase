@@ -16,13 +16,10 @@ export default class RtcCliant {
 
   async getUserMedia() {
     try {
-      const constraints = {
-        audio: true,
-        video: true,
-      };
+      const constraints = { audio: true, video: true };
       this.mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
