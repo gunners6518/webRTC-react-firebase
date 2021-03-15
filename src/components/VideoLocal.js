@@ -14,7 +14,7 @@ export const VideoLocal = ({ rtcCliant }) => {
       try {
         currentVideoRef.srcObject = mediaStream;
       } catch (err) {
-        console.error(err);
+        console.log(err);
       }
     };
 
