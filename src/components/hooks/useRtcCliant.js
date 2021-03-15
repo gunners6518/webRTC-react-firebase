@@ -1,23 +1,23 @@
 import { useReducer, useState, useEffect } from "react";
-import RtcCliant from "../../utils/RtcCliant";
+import rtcClient from "../../utils/rtcClient";
 
-export const useRtcCliant = () => {
-  const [rtcCliant, _setRtcCliant] = useState(null);
+export const usertcClient = () => {
+  const [rtcClient, _setrtcClient] = useState(null);
   const [, forceRender] = useReducer((boolean) => !boolean, false);
 
-  const setRtcCliant = (rtcCliant) => {
-    _setRtcCliant(rtcCliant);
+  const setrtcClient = (rtcClient) => {
+    _setrtcClient(rtcClient);
     forceRender();
   };
 
   useEffect(() => {
     const init = async () => {
-      const cliant = new RtcCliant(setRtcCliant);
+      const cliant = new rtcClient(setrtcClient);
       await cliant.getUserMedia();
-      cliant.setRtcCliant();
+      cliant.setrtcClient();
     };
     init();
   }, []);
 
-  return rtcCliant;
+  return rtcClient;
 };

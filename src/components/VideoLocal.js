@@ -2,10 +2,10 @@ import React, { useEffect, useRef } from "react";
 
 import { Video } from "./Video";
 
-export const VideoLocal = ({ rtcCliant }) => {
+export const VideoLocal = ({ rtcClient }) => {
   const videoRef = useRef(null);
-  let currentVideoRef = videoRef.currrent;
-  const mediaStream = rtcCliant.mediaStream;
+  const currentVideoRef = videoRef.currrent;
+  const mediaStream = rtcClient.mediaStream;
 
   useEffect(() => {
     if (currentVideoRef === null) return;
@@ -14,7 +14,7 @@ export const VideoLocal = ({ rtcCliant }) => {
       try {
         currentVideoRef.srcObject = mediaStream;
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     };
 
@@ -25,7 +25,7 @@ export const VideoLocal = ({ rtcCliant }) => {
     <div>
       <Video
         isLocal={true}
-        name={rtcCliant.localPeerName}
+        name={rtcClient.localPeerName}
         videoRef={videoRef}
       ></Video>
     </div>

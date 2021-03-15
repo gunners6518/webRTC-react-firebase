@@ -56,7 +56,7 @@ export const InputFormLocal = ({ rtcClient }) => {
 
   const initializeLocalPeer = useCallback(
     (e) => {
-      rtcCliant.startListening(name);
+      rtcClient.startListening(name);
       e.preventDefault();
     },
     [name, rtcClient]

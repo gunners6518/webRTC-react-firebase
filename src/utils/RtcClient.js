@@ -23,13 +23,9 @@ export default class RtcClient {
     }
   }
 
-  async setMediaStream() {
-    await this.getUserMedia();
-  }
-
   startListening(localPeerName) {
     this.localPeerName = localPeerName;
-    this.setRtcCliant();
+    this.setrtcClient();
     //todo:ここにシグナリングサーバーをリッスンする処理を追加する
   }
 }
