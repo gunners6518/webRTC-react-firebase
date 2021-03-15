@@ -25,4 +25,10 @@ export default class RtcCliant {
       console.log(error);
     }
   }
+
+  startListening(localPeerName) {
+    this.localPeerName = localPeerName;
+    this.setRtcCliant();
+    //todo:ここにシグナリングサーバーをリッスンする処理を追加する
+  }
 }
