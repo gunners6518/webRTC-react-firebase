@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const InputFormRemote = ({ rtcCliant }) => {
+export const InputFormRemote = ({ rtcClient }) => {
   const classes = useStyles();
   const label = "相手の名前";
   const [disabled, setDisabled] = useState(true);
@@ -56,15 +56,15 @@ export const InputFormRemote = ({ rtcCliant }) => {
 
   const initializeRemotePeer = useCallback(
     (e) => {
-      rtcCliant.remotePeerName = name;
-      rtcCliant.setRtcCliant();
+      rtcClient.remotePeerName = name;
+      rtcClient.setRtcClient();
       e.preventDefault();
     },
-    [name, rtcCliant]
+    [name, rtcClient]
   );
 
-  if (rtcCliant.localPeerName === "") return <></>;
-  if (rtcCliant.remotePeerName !== "") return <></>;
+  if (rtcClient.localPeerName === "") return <></>;
+  if (rtcClient.remotePeerName !== "") return <></>;
 
   return (
     <Container component="main" maxWidth="xs">

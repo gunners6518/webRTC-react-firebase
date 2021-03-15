@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const InputFormLocal = ({ rtcCliant }) => {
+export const InputFormLocal = ({ rtcClient }) => {
   const classes = useStyles();
   const label = "あなたの名前";
   const [disabled, setDisabled] = useState(true);
@@ -56,14 +56,14 @@ export const InputFormLocal = ({ rtcCliant }) => {
 
   const initializeLocalPeer = useCallback(
     (e) => {
-      rtcCliant.localPeerName = name;
-      rtcCliant.setRtcCliant();
+      rtcClient.localPeerName = name;
+      rtcClient.setRtcClient();
       e.preventDefault();
     },
-    [name, rtcCliant]
+    [name, rtcClient]
   );
 
-  if (rtcCliant.localPeerName !== "") return <></>;
+  if (rtcClient.localPeerName !== "") return <></>;
 
   return (
     <Container component="main" maxWidth="xs">

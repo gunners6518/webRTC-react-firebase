@@ -1,15 +1,28 @@
-export default class RtcCliant {
-  constructor(setRtcCliant) {
+export default class RtcClient {
+  constructor(setRtcClient) {
     const config = {
       iceServers: [{ urls: "stun:stun.stunprotocol.org" }],
     };
     this.rtcPeerConnection = new RTCPeerConnection(config);
     this.localPeerName = "";
     this.remotePeerName = "";
-    this._setRtcCliant = setRtcCliant;
+    this._setRtcClient = setRtcClient;
+    this.mediaStream = null;
   }
 
-  setRtcCliant() {
-    this._setRtcCliant(this);
+  setRtcClient() {
+    this._setRtcClient(this);
+  }
+
+  async getUserMedia() {
+    try {
+      const constraints = {
+        audio: true,
+        video: true,
+      };
+      this.mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
