@@ -4,7 +4,7 @@ import { Video } from "./Video";
 
 export const VideoLocal = ({ rtcClient }) => {
   const videoRef = useRef(null);
-  const currentVideoRef = videoRef.currrent;
+  const currentVideoRef = videoRef.current;
   const mediaStream = rtcClient.mediaStream;
 
   useEffect(() => {
