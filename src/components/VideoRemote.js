@@ -1,12 +1,16 @@
 import React from "react";
 import { Video } from "./Video";
 
-export const VideoRemote = ({ name }) => {
-  const videoRef = null;
+export const VideoRemote = ({ rtcClient }) => {
+  const videoRef = rtcClient.remoteVideoRef;
 
   return (
     <div>
-      <Video isLocal={false} name={name} videoRef={videoRef}></Video>
+      <Video
+        isLocal={false}
+        name={rtcClient.remotePeerName}
+        videoRef={videoRef}
+      ></Video>
     </div>
   );
 };
