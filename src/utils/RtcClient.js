@@ -54,6 +54,32 @@ export default class RtcClient {
     return this.mediaStream.getVideoTracks()[0];
   }
 
+  senOnTrack(){
+    this.rtcPeerConnection.ontrack=(rtcTrackEvent)=>{
+      if(rtcTrackEvent.track.kind !== 'video')return; 
+      const trackMediaStream = rtcTrackEvent.stream[0]
+      this.remoteVideoRef.current.srcObject = trackMediaStream
+      this.setRtcClient()
+    }
+
+    this.setRtcClient()
+  }
+
+  connect(remotePeerName){
+    this.remotePeerName = remotePeerName
+    this.setOnicecandidateCallback()
+    this.senOnTrack()
+    this.setRtcClient();
+  }
+
+  setOnicecandidateCallback(){
+    this.rtcPeerConnection.onicecandidate=({candidate})=>{
+      if(candidate){
+        //todo:remoteにcandidateを通知する
+      }
+    }
+  }
+
   startListening(localPeerName) {
     this.localPeerName = localPeerName;
     this.setrtcClient();
