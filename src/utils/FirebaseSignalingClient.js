@@ -19,4 +19,9 @@ export default class FirebaseSignalingClient {
     this.localPeerName = "";
     this.remotePeerName = "";
   }
+
+  setPeerNames(localPeerName, remotePeerName) {
+    this.localPeerName = localPeerName;
+    this.remotePeerName = remotePeerName;
+  }
 }

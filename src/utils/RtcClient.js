@@ -54,30 +54,60 @@ export default class RtcClient {
     return this.mediaStream.getVideoTracks()[0];
   }
 
-  senOnTrack(){
-    this.rtcPeerConnection.ontrack=(rtcTrackEvent)=>{
-      if(rtcTrackEvent.track.kind !== 'video')return; 
-      const trackMediaStream = rtcTrackEvent.stream[0]
-      this.remoteVideoRef.current.srcObject = trackMediaStream
-      this.setRtcClient()
-    }
-
-    this.setRtcClient()
+  async offer() {
+    const sessionDescription = await this.createOffer();
+    this.setLocalDescription(sessionDescription);
+    console.log({ sessionDescription });
   }
 
-  connect(remotePeerName){
-    this.remotePeerName = remotePeerName
-    this.setOnicecandidateCallback()
-    this.senOnTrack()
+  async createOffer() {
+    try {
+      return await this.rtcPeerConnection.createOffer();
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async setLocalDescription(sessionDescription) {
+    try {
+      this.rtcPeerConnection.setLocalDescription(sessionDescription);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  sendOffer() {
+    this.firebaseSignallingClient.setPeerNames(
+      this.localPeerName,
+      this.remotePeerName
+    );
+  }
+
+  senOnTrack() {
+    this.rtcPeerConnection.ontrack = (rtcTrackEvent) => {
+      if (rtcTrackEvent.track.kind !== "video") return;
+      const trackMediaStream = rtcTrackEvent.stream[0];
+      this.remoteVideoRef.current.srcObject = trackMediaStream;
+      this.setRtcClient();
+    };
+
     this.setRtcClient();
   }
 
-  setOnicecandidateCallback(){
-    this.rtcPeerConnection.onicecandidate=({candidate})=>{
-      if(candidate){
+  connect(remotePeerName) {
+    this.remotePeerName = remotePeerName;
+    this.setOnicecandidateCallback();
+    this.senOnTrack();
+    this.offer();
+    this.setRtcClient();
+  }
+
+  setOnicecandidateCallback() {
+    this.rtcPeerConnection.onicecandidate = ({ candidate }) => {
+      if (candidate) {
         //todo:remoteにcandidateを通知する
       }
-    }
+    };
   }
 
   startListening(localPeerName) {
