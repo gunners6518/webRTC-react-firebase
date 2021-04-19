@@ -56,23 +56,23 @@ export default class RtcClient {
 
   async offer() {
     const sessionDescription = await this.createOffer();
-    this.setLocalDescription(sessionDescription);
-    console.log({ sessionDescription });
+    await this.setLocalDescription(sessionDescription);
+    this.sendOffer();
   }
 
   async createOffer() {
     try {
       return await this.rtcPeerConnection.createOffer();
     } catch (e) {
-      console.error(e);
+      console.log(e);
     }
   }
 
   async setLocalDescription(sessionDescription) {
     try {
-      this.rtcPeerConnection.setLocalDescription(sessionDescription);
+      await this.rtcPeerConnection.setLocalDescription(sessionDescription);
     } catch (e) {
-      console.error(e);
+      console.log(e);
     }
   }
 
@@ -81,6 +81,8 @@ export default class RtcClient {
       this.localPeerName,
       this.remotePeerName
     );
+
+    console.log(this.rtcPeerConnection.localDescription);
   }
 
   senOnTrack() {
