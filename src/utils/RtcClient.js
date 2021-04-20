@@ -57,7 +57,7 @@ export default class RtcClient {
   async offer() {
     const sessionDescription = await this.createOffer();
     await this.setLocalDescription(sessionDescription);
-    this.sendOffer();
+    await this.sendOffer();
   }
 
   async createOffer() {
@@ -76,13 +76,13 @@ export default class RtcClient {
     }
   }
 
-  sendOffer() {
+  async sendOffer() {
     this.firebaseSignallingClient.setPeerNames(
       this.localPeerName,
       this.remotePeerName
     );
 
-    console.log(this.rtcPeerConnection.localDescription);
+    this.firebaseSignallingClient.sendOffer(this.localDescription);
   }
 
   senOnTrack() {
@@ -96,12 +96,16 @@ export default class RtcClient {
     this.setRtcClient();
   }
 
-  connect(remotePeerName) {
+  async connect(remotePeerName) {
     this.remotePeerName = remotePeerName;
     this.setOnicecandidateCallback();
     this.senOnTrack();
-    this.offer();
+    await this.offer();
     this.setRtcClient();
+  }
+
+  get localDescription() {
+    return this.rtcPeerConnection.localDescription.toJSON();
   }
 
   setOnicecandidateCallback() {

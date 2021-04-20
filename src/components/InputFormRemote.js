@@ -55,9 +55,8 @@ export const InputFormRemote = ({ rtcClient }) => {
   }, [name]);
 
   const initializeRemotePeer = useCallback(
-    (e) => {
-
-      rtcClient.connect(name)
+    async (e) => {
+      await rtcClient.connect(name);
       e.preventDefault();
     },
     [name, rtcClient]
@@ -84,11 +83,11 @@ export const InputFormRemote = ({ rtcClient }) => {
             onChange={(e) => setName(e.target.value)}
             onCompositionEnd={() => setIsComposed(false)}
             onCompositionStart={() => setIsComposed(true)}
-            onKeyDown={(e) => {
+            onKeyDown={async (e) => {
               console.log({ e });
               if (isComposed) return; //変換中のenter押下はreturn
               if (e.target.value === "") return; //入力空でのenterはreturn
-              if (e.key === "Enter") initializeRemotePeer(e);
+              if (e.key === "Enter") await initializeRemotePeer(e);
             }}
             value={name}
             variant="outlined"
@@ -100,7 +99,7 @@ export const InputFormRemote = ({ rtcClient }) => {
             type="submit"
             variant="contained"
             disabled={disabled}
-            onClick={(e) => initializeRemotePeer(e)}
+            onClick={async (e) => await initializeRemotePeer(e)}
           >
             決定
           </Button>
