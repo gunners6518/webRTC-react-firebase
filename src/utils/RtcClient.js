@@ -103,6 +103,9 @@ export default class RtcClient {
     this.setOntrack();
     //受け取ったsessionDescriptionの確立
     await this.setRemoteDesctiption(sessionDescription);
+    const answer = await this.rtcPeerConnection.createAnswer();
+    this.rtcPeerConnection.setLocalDescription(answer);
+    await this.sendAnswer();
   }
 
   async connect(remotePeerName) {
@@ -119,6 +122,15 @@ export default class RtcClient {
 
   async setRemoteDesctiption(sessionDescription) {
     await this.rtcPeerConnection.setRemoteDescription(sessionDescription);
+  }
+
+  async sendAnswer() {
+    this.firebaseSignallingClient.setPeerNames(
+      this.localPeerName,
+      this.remotePeerName
+    );
+
+    await this.firebaseSignallingClient.sendAnswer(this.localDescription);
   }
 
   get localDescription() {
@@ -145,7 +157,7 @@ export default class RtcClient {
         console.log({ data });
         const { sender, sessionDescription, type } = data;
         switch (type) {
-          case "":
+          case "offer":
             await this.answer(sender, sessionDescription);
             break;
           default:

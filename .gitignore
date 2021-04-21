@@ -25,3 +25,4 @@ yarn-error.log*
 /.bash_history
 
 /.eslintcache
+.env
