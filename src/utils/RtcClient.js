@@ -1,4 +1,4 @@
-import FirebaseSignalingClient from "./FirebaseSignalingClient";
+import FirebaseSignallingClient from "./FirebaseSignallingClient";
 
 export default class RtcClient {
   constructor(remoteVideoRef, setRtcClient) {
@@ -6,7 +6,7 @@ export default class RtcClient {
       iceServers: [{ urls: "stun:stun.stunprotocol.org" }],
     };
     this.rtcPeerConnection = new RTCPeerConnection(config);
-    this.firebaseSignallingClient = new FirebaseSignalingClient();
+    this.firebaseSignallingClient = new FirebaseSignallingClient();
     this.localPeerName = "";
     this.remotePeerName = "";
     this.remoteVideoRef = remoteVideoRef;
@@ -34,15 +34,15 @@ export default class RtcClient {
   }
 
   addTracks() {
-    this.addAudioTracks();
-    this.addVideoTracks();
+    this.addAudioTrack();
+    this.addVideoTrack();
   }
 
-  addAudioTracks() {
+  addAudioTrack() {
     this.rtcPeerConnection.addTrack(this.audioTrack, this.mediaStream);
   }
 
-  addVideoTracks() {
+  addVideoTrack() {
     this.rtcPeerConnection.addTrack(this.videoTrack, this.mediaStream);
   }
 
@@ -64,7 +64,7 @@ export default class RtcClient {
     try {
       return await this.rtcPeerConnection.createOffer();
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   }
 
@@ -72,7 +72,7 @@ export default class RtcClient {
     try {
       await this.rtcPeerConnection.setLocalDescription(sessionDescription);
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   }
 
@@ -82,26 +82,43 @@ export default class RtcClient {
       this.remotePeerName
     );
 
-    this.firebaseSignallingClient.sendOffer(this.localDescription);
+    await this.firebaseSignallingClient.sendOffer(this.localDescription);
   }
 
-  senOnTrack() {
+  setOntrack() {
     this.rtcPeerConnection.ontrack = (rtcTrackEvent) => {
       if (rtcTrackEvent.track.kind !== "video") return;
-      const trackMediaStream = rtcTrackEvent.stream[0];
-      this.remoteVideoRef.current.srcObject = trackMediaStream;
+
+      const remoteMediaStream = rtcTrackEvent.streams[0];
+      this.remoteVideoRef.current.srcObject = remoteMediaStream;
       this.setRtcClient();
     };
 
     this.setRtcClient();
   }
 
-  async connect(remotePeerName) {
-    this.remotePeerName = remotePeerName;
+  async answer(sender, sessionDescription) {
+    this.remotePeerName = sender;
     this.setOnicecandidateCallback();
-    this.senOnTrack();
-    await this.offer();
-    this.setRtcClient();
+    this.setOntrack();
+    //受け取ったsessionDescriptionの確立
+    await this.setRemoteDesctiption(sessionDescription);
+  }
+
+  async connect(remotePeerName) {
+    try {
+      this.remotePeerName = remotePeerName;
+      this.setOnicecandidateCallback();
+      this.setOntrack();
+      await this.offer();
+      this.setRtcClient();
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async setRemoteDesctiption(sessionDescription) {
+    await this.rtcPeerConnection.setRemoteDescription(sessionDescription);
   }
 
   get localDescription() {
@@ -109,20 +126,31 @@ export default class RtcClient {
   }
 
   setOnicecandidateCallback() {
-    this.rtcPeerConnection.onicecandidate = ({ candidate }) => {
+    this.rtcPeerConnection.onicecandidate = async ({ candidate }) => {
       if (candidate) {
         //todo:remoteにcandidateを通知する
       }
     };
   }
 
-  startListening(localPeerName) {
+  async startListening(localPeerName) {
     this.localPeerName = localPeerName;
-    this.setrtcClient();
-    this.FirebaseSignalingClient.database
+    this.setRtcClient();
+    this.firebaseSignallingClient.database
       .ref(localPeerName)
-      .on("value", (snapshot) => {
+      .on("value", async (snapshot) => {
         const data = snapshot.val();
+        if (data === null) return;
+
+        console.log({ data });
+        const { sender, sessionDescription, type } = data;
+        switch (type) {
+          case "":
+            await this.answer(sender, sessionDescription);
+            break;
+          default:
+            break;
+        }
       });
   }
 }

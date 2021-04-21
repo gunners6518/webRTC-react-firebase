@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -42,8 +42,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const InputFormLocal = ({ rtcClient }) => {
-  const classes = useStyles();
   const label = "あなたの名前";
+  const classes = useStyles();
   const [disabled, setDisabled] = useState(true);
   const [name, setName] = useState("");
   const [isComposed, setIsComposed] = useState(false);
@@ -55,8 +55,8 @@ export const InputFormLocal = ({ rtcClient }) => {
   }, [name]);
 
   const initializeLocalPeer = useCallback(
-    (e) => {
-      rtcClient.startListening(name);
+    async (e) => {
+      await rtcClient.startListening(name);
       e.preventDefault();
     },
     [name, rtcClient]
@@ -81,11 +81,10 @@ export const InputFormLocal = ({ rtcClient }) => {
             onChange={(e) => setName(e.target.value)}
             onCompositionEnd={() => setIsComposed(false)}
             onCompositionStart={() => setIsComposed(true)}
-            onKeyDown={(e) => {
-              console.log({ e });
+            onKeyDown={async (e) => {
               if (isComposed) return; //変換中のenter押下はreturn
               if (e.target.value === "") return; //入力空でのenterはreturn
-              if (e.key === "Enter") initializeLocalPeer(e);
+              if (e.key === "Enter") await initializeLocalPeer(e);
             }}
             required
             value={name}
@@ -96,7 +95,7 @@ export const InputFormLocal = ({ rtcClient }) => {
             color="primary"
             disabled={disabled}
             fullWidth
-            onClick={(e) => initializeLocalPeer(e)}
+            onClick={async (e) => await initializeLocalPeer(e)}
             type="submit"
             variant="contained"
           >
