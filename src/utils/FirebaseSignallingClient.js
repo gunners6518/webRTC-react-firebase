@@ -54,10 +54,6 @@ export default class FirebaseSignallingClient {
     });
   }
 
-  async remove(path) {
-    await this.database.ref(path).remove();
-  }
-
   async sendCandidate(candidate) {
     await this.targetRef.set({
       type: "candidate",
